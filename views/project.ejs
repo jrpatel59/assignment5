@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <%- include('partials/navbar', { page: "" }) %>
+
+    <div class="container mx-auto py-12 text-center">
+        <div class="hero">
+            <h1 class="text-3xl font-bold"><%= project.title %></h1>
+            <p class="text-gray-400 mt-16">Below, you will find detailed information about the project: <%= project.title %></p>
+        </div>
+    </div>
+
+    <section class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
+        <img src="<%= project.feature_img_url %>" alt="<%= project.title %>" class="rounded-lg shadow-lg w-full">
+        <div class="text-gray-300 text-lg mt-4">
+            <p><%= project.intro_short %></p>
+            <p class="mt-4"><%= project.impact %></p>
+            <a href="<%= project.original_source_url %>" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded">Learn More</a>
+        </div>
+        <div id="quote" class="mt-4 text-gray-400"></div>
+        <a href="#" onclick="history.back(); return false;" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded">Back</a>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("https://dummyjson.com/quotes/random")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("quote").innerHTML = `<p>"${data.quote}" - ${data.author}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>

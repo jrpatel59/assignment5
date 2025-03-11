@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <%- include('partials/navbar', { page: "/about" }) %>
+
+    <div class="container mx-auto py-12 text-center">
+        <div class="hero">
+            <h1 class="text-3xl font-bold">About</h1>
+            <p class="text-gray-400 mt-16">Everything you want to know about me - the designer & developer.</p>
+        </div>
+    </div>
+
+    <section class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <img src="https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHVuaXZlcnNpdHl8ZW58MHx8MHx8fDA%3D" alt="Campus Building" class="rounded-lg shadow-lg w-full md:w-1/2">
+            <div class="text-gray-300 text-lg">
+                <h3 class="text-2xl font-bold">My name is Jeet Patel and I'm currently studying at Seneca Polytechnic.</h3>
+                <p class="mt-4">I am currently in Computer Programming and Analysis course. I have studied C in my first semester and then I have also studied C++ in my 2 semester. Moreover, I have also learned MySQL in my highschool and in 1 and 2 semester. My hobby is to play Basketball.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

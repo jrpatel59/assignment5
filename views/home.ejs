@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <%- include('partials/navbar', { page: "/" }) %>
+
+    <header class="text-center py-20">
+        <h1 class="text-4xl font-bold">Welcome</h1>
+        <p class="mt-4 text-gray-400">Browse our current collection of modern solutions to help fight Climate Change.</p>
+        <a href="/solutions/projects" class="mt-6 bg-green-500 hover:bg-green-600 text-black px-6 py-3 rounded-lg inline-block">Get Started Now</a>
+    </header>
+
+    <section class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1615855327579-a2b9d654f682?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZmFybWxhbmQlMjByZXN0b3JhdGlvbnxlbnwwfHwwfHx8MA%3D%3D" alt="Farmland Restoration" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-xl font-bold">Abandoned Farmland Restoration</h2>
+                    <p class="mt-4 text-gray-400">Restoration can bring degraded farmland back into productivity.</p>
+                    <a href="/solutions/projects/1" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-block">More Information</a>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1588399944136-efbd34b99d6b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2VtZW50fGVufDB8fDB8fHww" alt="Alternative Cement" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-xl font-bold">Alternative Cement</h2>
+                    <p class="mt-4 text-gray-400">Reformulation can reduce emissions by millions of metric tons each year.</p>
+                    <a href="/solutions/projects/2" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-block">More Information</a>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1519219444773-9453a2f1f87c?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cmlkaW5nJTIwYmljeWNsZSUyMGluJTIwY2l0eXxlbnwwfHwwfHx8MA%3D%3D" alt="Bicycle Infrastructure" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-xl font-bold">Bicycle Infrastructure</h2>
+                    <p class="mt-4 text-gray-400">Supports safe and abundant bicycle use, reducing fossil fuel dependency.</p>
+                    <a href="/solutions/projects/3" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-block">More Information</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
