@@ -3,67 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects</title>
+    <title><%= project.title %> | Climate Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.0.0/dist/full.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
 </head>
-<body class="bg-base-100 text-base-content">
-    <%- include('partials/navbar', { page: '/solutions/projects' }) %>
-    
-    <div class="container mx-auto p-4">
-        <!-- Hero Section -->
-        <div class="hero bg-base-200 rounded-lg p-8 mb-8">
-            <div class="hero-content text-center">
-                <div class="max-w-md">
-                    <h1 class="text-5xl font-bold">Projects</h1>
-                    <p class="py-6">Browse our climate solutions projects</p>
-                    <div class="flex justify-center gap-4">
-                        <a href="/solutions/projects?sector=Industry" class="btn btn-primary">Industry</a>
-                        <a href="/solutions/projects?sector=Transportation" class="btn btn-secondary">Transportation</a>
-                        <a href="/solutions/projects?sector=Electricity" class="btn btn-accent">Electricity</a>
+<body class="bg-gray-100">
+    <%- include('partials/navbar', { page: '' }) %>
+
+    <main class="container mx-auto py-8 px-4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4"><%= project.title %></h1>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2">
+                    <img src="<%= project.feature_img_url %>" 
+                         alt="<%= project.title %>" 
+                         class="rounded-lg w-full h-auto object-cover">
+                </div>
+                
+                <div class="md:w-1/2">
+                    <div class="mb-6">
+                        <span class="font-semibold">Sector:</span>
+                        <span class="badge badge-primary ml-2">
+                            <%= project.Sector.sector_name %>
+                        </span>
+                    </div>
+                    
+                    <div class="prose max-w-none">
+                        <h3 class="text-xl font-semibold mb-2">Summary</h3>
+                        <p class="mb-6"><%= project.summary_short %></p>
+                        
+                        <h3 class="text-xl font-semibold mb-2">Detailed Description</h3>
+                        <p class="mb-6"><%= project.intro_short %></p>
+                        
+                        <h3 class="text-xl font-semibold mb-2">Environmental Impact</h3>
+                        <p class="mb-6"><%= project.impact %></p>
+                    </div>
+                    
+                    <div class="mt-6 flex flex-wrap gap-4">
+                        <a href="<%= project.original_source_url %>" 
+                           target="_blank" 
+                           class="btn btn-primary">
+                            View Original Source
+                        </a>
+                        <a href="/solutions/editProject/<%= project.id %>" 
+                           class="btn btn-secondary">
+                            Edit Project
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Projects Table -->
-        <div class="overflow-x-auto">
-            <table class="table table-zebra w-full">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Sector</th>
-                        <th>Summary</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% projects.forEach(project => { %>
-                    <tr>
-                        <td><%= project.title %></td>
-                        <td>
-                            <a href="/solutions/projects?sector=<%= project.Sector.sector_name %>" 
-                               class="badge badge-outline hover:badge-primary">
-                                <%= project.Sector.sector_name %>
-                            </a>
-                        </td>
-                        <td><%= project.summary_short %></td>
-                        <td>
-                            <a href="/solutions/projects/<%= project.id %>" 
-                               class="btn btn-sm btn-info mr-2">
-                                Details
-                            </a>
-                            <a href="/solutions/editProject/<%= project.id %>" 
-                               class="btn btn-sm btn-warning">
-                                Edit
-                            </a>
-                        </td>
-                    </tr>
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Other Climate Solutions</h2>
+            
+            <% if (projects && projects.length > 0) { %>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <% projects.forEach(otherProject => { %>
+                        <% if (otherProject.id !== project.id) { %>
+                            <div class="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                                <img src="<%= otherProject.feature_img_url %>" 
+                                     alt="<%= otherProject.title %>"
+                                     class="w-full h-48 object-cover">
+                                <div class="p-4">
+                                    <h3 class="font-bold text-lg mb-2"><%= otherProject.title %></h3>
+                                    <p class="text-gray-600 mb-4 line-clamp-2"><%= otherProject.summary_short %></p>
+                                    <a href="/solutions/projects/<%= otherProject.id %>" 
+                                       class="btn btn-sm btn-outline">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        <% } %>
                     <% }) %>
-                </tbody>
-            </table>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>No other projects found</span>
+                </div>
+            <% } %>
         </div>
-    </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Project page loaded');
+        });
+    </script>
 </body>
 </html>

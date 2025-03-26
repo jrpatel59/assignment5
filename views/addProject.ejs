@@ -1,49 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Project</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/css/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Project</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.0.0/dist/full.css" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-white">
-    <%- include('partials/navbar', { page: '/solutions/addProject' }) %>
+<body class="bg-gray-100">
+  <%- include('partials/navbar', { page: '/solutions/addProject' }) %>
 
-    <div class="container mx-auto py-12">
-        <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
-            <h1 class="text-3xl font-bold mb-6">Add New Project</h1>
-            
-            <form action="/solutions/addProject" method="POST">
-                <div class="grid grid-cols-1 gap-6">
-                    <!-- Form fields here -->
-                    <div>
-                        <label class="block mb-2">Title</label>
-                        <input type="text" name="title" required class="w-full p-2 bg-gray-700 rounded">
-                    </div>
-                    
-                    <div>
-                        <label class="block mb-2">Image URL</label>
-                        <input type="url" name="feature_img_url" required class="w-full p-2 bg-gray-700 rounded">
-                    </div>
-                    
-                    <div>
-                        <label class="block mb-2">Sector</label>
-                        <select name="sector_id" required class="w-full p-2 bg-gray-700 rounded">
-                            <% sectors.forEach(sector => { %>
-                                <option value="<%= sector.id %>"><%= sector.sector_name %></option>
-                            <% }) %>
-                        </select>
-                    </div>
-                    
-                    <!-- Add other form fields similarly -->
-                    
-                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-                        Add Project
-                    </button>
-                </div>
-            </form>
+  <main class="container mx-auto py-8 px-4">
+    <div class="bg-white rounded-lg shadow-md p-6 max-w-3xl mx-auto">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">Add New Project</h1>
+      
+      <form action="/solutions/addProject" method="POST" class="space-y-6">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Project Title</span>
+          </label>
+          <input type="text" name="title" required class="input input-bordered w-full">
         </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Featured Image URL</span>
+          </label>
+          <input type="url" name="feature_img_url" required class="input input-bordered w-full">
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Sector</span>
+          </label>
+          <select name="sector_id" required class="select select-bordered w-full">
+            <% sectors.forEach(sector => { %>
+              <option value="<%= sector.id %>"><%= sector.sector_name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Short Summary</span>
+          </label>
+          <textarea name="summary_short" required class="textarea textarea-bordered h-24"></textarea>
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Detailed Introduction</span>
+          </label>
+          <textarea name="intro_short" required class="textarea textarea-bordered h-32"></textarea>
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Environmental Impact</span>
+          </label>
+          <textarea name="impact" required class="textarea textarea-bordered h-32"></textarea>
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Source URL</span>
+          </label>
+          <input type="url" name="original_source_url" required class="input input-bordered w-full">
+        </div>
+
+        <div class="flex justify-end gap-4">
+          <a href="/solutions/projects" class="btn btn-ghost">Cancel</a>
+          <button type="submit" class="btn btn-primary">Add Project</button>
+        </div>
+      </form>
     </div>
+  </main>
 </body>
 </html>

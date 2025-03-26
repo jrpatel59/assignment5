@@ -1,57 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/css/main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climate Solutions - Projects</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@3.0.0/dist/full.css" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-white">
-    <%- include('partials/navbar', { page: "/solutions/projects" }) %>
+<body class="bg-gray-100">
+  <%- include('partials/navbar', { page: '/solutions/projects' }) %>
 
-    <div class="container mx-auto py-12 text-center">
-        <div class="hero">
-            <h1 class="text-3xl font-bold">Projects</h1>
-            <p class="text-gray-400 mt-16">Browse our current collection of projects.</p>
-        </div>
-    </div>
+  <main class="container mx-auto py-8 px-4">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6">Climate Solutions Projects</h1>
+      
+<div class="flex flex-wrap gap-4 mb-8">
+    <a href="/solutions/projects" 
+       class="btn <%= typeof currentSector === 'undefined' || currentSector === null ? 'btn-primary' : 'btn-outline' %>">
+      All Sectors
+    </a>
+    <% const sectors = ['Industry', 'Transportation', 'Electricity']; %>
+    <% sectors.forEach(sector => { %>
+      <a href="/solutions/projects?sector=<%= sector %>" 
+         class="btn <%= currentSector === sector ? 'btn-primary' : 'btn-outline' %>">
+        <%= sector %>
+      </a>
+    <% }) %>
+  </div>
 
-    <section class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
-        <div class="flex justify-center gap-4 mb-8">
-            <a href="/solutions/projects?sector=Industry" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Industry</a>
-            <a href="/solutions/projects?sector=Transportation" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Transportation</a>
-            <a href="/solutions/projects?sector=Electricity" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Electricity</a>
-        </div>
-
-        <table class="w-full">
+      <% if (projects.length > 0) { %>
+        <div class="overflow-x-auto">
+          <table class="table w-full">
             <thead>
-                <tr class="bg-gray-700">
-                    <th class="text-left p-4">Title</th>
-                    <th class="text-left p-4">Sector</th>
-                    <th class="text-left p-4">Summary</th>
-                    <th class="text-left p-4">Details</th>
-                </tr>
+              <tr>
+                <th>Title</th>
+                <th>Sector</th>
+                <th>Summary</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
-                <% projects.forEach(project => { %>
-                    <tr class="hover:bg-gray-700 border-b border-gray-600">
-                        <td class="p-4"><%= project.title %></td>
-                        <td class="p-4">
-                            <a href="/solutions/projects?sector=<%= project.sector %>" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-                                <%= project.sector %>
-                            </a>
-                        </td>
-                        <td class="p-4"><%= project.summary_short %></td>
-                        <td class="p-4">
-                            <a href="/solutions/projects/<%= project.id %>" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                                Details
-                            </a>
-                        </td>
-                    </tr>
-                <% }) %>
+              <% projects.forEach(project => { %>
+                <tr>
+                  <td>
+                    <a href="/solutions/projects/<%= project.id %>" class="font-medium text-blue-600 hover:underline">
+                      <%= project.title %>
+                    </a>
+                  </td>
+                  <td>
+                    <span class="badge badge-outline">
+                      <%= project.Sector.sector_name %>
+                    </span>
+                  </td>
+                  <td><%= project.summary_short %></td>
+                  <td class="flex gap-2">
+                    <a href="/solutions/projects/<%= project.id %>" class="btn btn-sm btn-info">
+                      View
+                    </a>
+                    <a href="/solutions/editProject/<%= project.id %>" class="btn btn-sm btn-warning">
+                      Edit
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
             </tbody>
-        </table>
-    </section>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="alert alert-warning shadow-lg">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>No projects found. <a href="/solutions/addProject" class="font-bold underline">Add a new project</a></span>
+          </div>
+        </div>
+      <% } %>
+
+      <div class="mt-6">
+        <a href="/solutions/addProject" class="btn btn-primary">
+          + Add New Project
+        </a>
+      </div>
+    </div>
+  </main>
 </body>
 </html>

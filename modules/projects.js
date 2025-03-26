@@ -1,14 +1,13 @@
-require("dotenv").config();
+require('dotenv').config();
+require('pg');
+const { Sequelize, Op } = require('sequelize');
 
-const Sequelize = require("sequelize");
-
-// set up sequelize to point to our postgres database
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   dialectOptions: {
     ssl: {
-      require: true, // This will help you connect to the database with SSL
-      rejectUnauthorized: false, // Allows self-signed certificates
+      require: true, 
+      rejectUnauthorized: false, 
     },
   },
 });
@@ -22,8 +21,6 @@ sequelize
     console.log("Unable to connect to the database:", err);
   });
 
-
-// Define Sector model
 const Sector = sequelize.define('Sector', {
   id: {
     type: Sequelize.INTEGER,
@@ -32,13 +29,14 @@ const Sector = sequelize.define('Sector', {
   },
   sector_name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   }
 }, {
-  timestamps: false
+  timestamps: false,
+  tableName: 'Sectors'
 });
 
-// Define Project model
 const Project = sequelize.define('Project', {
   id: {
     type: Sequelize.INTEGER,
@@ -51,7 +49,10 @@ const Project = sequelize.define('Project', {
   },
   feature_img_url: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isUrl: true
+    }
   },
   summary_short: {
     type: Sequelize.TEXT,
@@ -67,71 +68,136 @@ const Project = sequelize.define('Project', {
   },
   original_source_url: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isUrl: true
+    }
   },
   sector_id: {
     type: Sequelize.INTEGER,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: Sector,
+      key: 'id'
+    }
   }
 }, {
-  timestamps: false
+  timestamps: false,
+  tableName: 'Projects'
 });
 
-// Define association
 Project.belongsTo(Sector, { foreignKey: 'sector_id' });
 
-// Initialize database connection
+const sampleSectors = [
+  { sector_name: 'Industry' },
+  { sector_name: 'Transportation' },
+  { sector_name: 'Electricity' }
+];
+
+const sampleProjects = [
+  {
+    title: 'Abandoned Farmland Restoration',
+    feature_img_url: 'https://images.unsplash.com/photo-1615855327579-a2b9d654f682',
+    summary_short: 'Restoration can bring degraded farmland back into productivity',
+    intro_short: 'This project focuses on restoring abandoned farmland to productive use through sustainable practices and soil regeneration techniques.',
+    impact: 'Reduces land waste by 40% and increases agricultural output by 25% in target regions',
+    original_source_url: 'https://drawdown.org/solutions/abandoned-farmland-restoration'
+  },
+  {
+    title: 'Bicycle Infrastructure',
+    feature_img_url: 'https://images.unsplash.com/photo-1519219444773-9453a2f1f87c',
+    summary_short: 'Developing bike lanes and parking infrastructure to support cycling',
+    intro_short: 'Comprehensive urban planning initiative to make cities more bike-friendly and reduce car dependency.',
+    impact: 'Reduces fossil fuel dependency by 15% and decreases traffic congestion by 20% in pilot cities',
+    original_source_url: 'https://drawdown.org/solutions/bicycle-infrastructure'
+  },
+  {
+    title: 'Solar Panel Recycling',
+    feature_img_url: 'https://images.unsplash.com/photo-1509391366360-2e959784a276',
+    summary_short: 'Sustainable recycling program for end-of-life solar panels',
+    intro_short: 'Innovative process to recover valuable materials from decommissioned solar panels.',
+    impact: 'Diverts 90% of solar panel waste from landfills and recovers 80% of reusable materials',
+    original_source_url: 'https://drawdown.org/solutions/concentrated-solar-power'
+  }
+];
+
+async function initializeData() {
+  try {
+    console.log('Checking database for existing data...');
+    
+    const existingSectors = await Sector.findAll();
+    if (existingSectors.length === 0) {
+      console.log('Creating sectors...');
+      await Sector.bulkCreate(sampleSectors);
+    }
+
+    const sectors = await Sector.findAll();
+    
+    const existingProjects = await Project.findAll();
+    if (existingProjects.length === 0) {
+      console.log('Creating projects...');
+      
+      const projectsToCreate = sampleProjects.map((project, index) => ({
+        ...project,
+        sector_id: sectors[index % sectors.length].id
+      }));
+      
+      await Project.bulkCreate(projectsToCreate);
+    }
+
+    console.log('Database initialization complete');
+  } catch (err) {
+    console.error('Error initializing database:', err);
+    throw err;
+  }
+}
+
 function initialize() {
   return new Promise((resolve, reject) => {
-    sequelize.sync()
+    sequelize.authenticate()
+      .then(() => sequelize.sync({ force: false })) 
+      .then(() => initializeData())
       .then(() => resolve())
       .catch(err => reject(err));
   });
 }
 
-// Get all projects with their sectors
 function getAllProjects() {
   return new Promise((resolve, reject) => {
     Project.findAll({
-      include: [Sector]
+      include: [Sector],
+      order: [['title', 'ASC']]
     })
-    .then(projects => {
-      if (projects.length > 0) {
-        resolve(projects);
-      } else {
-        reject("No projects found");
-      }
-    })
+    .then(projects => resolve(projects))
     .catch(err => reject(err));
   });
 }
 
-// Get a single project by ID
 function getProjectById(projectId) {
   return new Promise((resolve, reject) => {
     Project.findAll({
       where: { id: projectId },
-      include: [Sector]
+      include: [Sector],
+      limit: 1
     })
     .then(projects => {
       if (projects.length > 0) {
         resolve(projects[0]);
       } else {
-        reject("Unable to find requested project");
+        reject('Unable to find requested project');
       }
     })
     .catch(err => reject(err));
   });
 }
 
-// Get projects by sector
 function getProjectsBySector(sector) {
   return new Promise((resolve, reject) => {
     Project.findAll({
       include: [Sector],
       where: {
         '$Sector.sector_name$': {
-          [Sequelize.Op.iLike]: `%${sector}%`
+          [Op.iLike]: `%${sector}%`
         }
       }
     })
@@ -146,16 +212,16 @@ function getProjectsBySector(sector) {
   });
 }
 
-// Get all sectors
 function getAllSectors() {
   return new Promise((resolve, reject) => {
-    Sector.findAll()
-      .then(sectors => resolve(sectors))
-      .catch(err => reject(err));
+    Sector.findAll({
+      order: [['sector_name', 'ASC']]
+    })
+    .then(sectors => resolve(sectors))
+    .catch(err => reject(err));
   });
 }
 
-// Add a new project
 function addProject(projectData) {
   return new Promise((resolve, reject) => {
     Project.create(projectData)
@@ -164,7 +230,6 @@ function addProject(projectData) {
   });
 }
 
-// Edit an existing project
 function editProject(id, projectData) {
   return new Promise((resolve, reject) => {
     Project.update(projectData, {
@@ -175,7 +240,6 @@ function editProject(id, projectData) {
   });
 }
 
-// Delete a project
 function deleteProject(id) {
   return new Promise((resolve, reject) => {
     Project.destroy({

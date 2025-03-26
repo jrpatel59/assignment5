@@ -1,8 +1,36 @@
-<nav class="flex justify-between items-center p-6 bg-gray-800">
-    <a href="/" class="text-xl font-bold">Climate Solutions</a>
-    <div class="flex gap-4">
-        <a href="/solutions/projects" class="<%= (page == '/solutions/projects') ? 'text-white' : 'text-gray-400' %>">View Projects</a>
-        <a href="/solutions/addProject" class="<%= (page == '/solutions/addProject') ? 'text-white' : 'text-gray-400' %>">Add Project</a>
-        <a href="/about" class="<%= (page == '/about') ? 'text-white' : 'text-gray-400' %>">About</a>
+<nav class="bg-gray-800 text-white shadow-lg">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center py-4">
+        <a href="/" class="text-2xl font-bold">Climate Solutions</a>
+        
+        <div class="hidden md:flex space-x-4">
+          <a href="/" class="nav-link <%= page === '/' ? 'active' : '' %>">Home</a>
+          <a href="/solutions/projects" class="nav-link <%= page === '/solutions/projects' ? 'active' : '' %>">View Projects</a>
+          <a href="/solutions/addProject" class="nav-link <%= page === '/solutions/addProject' ? 'active' : '' %>">Add Project</a>
+          <a href="/about" class="nav-link <%= page === '/about' ? 'active' : '' %>">About</a>
+        </div>
+        
+        <button class="md:hidden focus:outline-none" id="mobile-menu-button">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="md:hidden hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-4 space-y-1">
+          <a href="/" class="block px-3 py-2 rounded-md text-base font-medium <%= page === '/' ? 'bg-gray-900' : '' %>">Home</a>
+          <a href="/solutions/projects" class="block px-3 py-2 rounded-md text-base font-medium <%= page === '/solutions/projects' ? 'bg-gray-900' : '' %>">View Projects</a>
+          <a href="/solutions/addProject" class="block px-3 py-2 rounded-md text-base font-medium <%= page === '/solutions/addProject' ? 'bg-gray-900' : '' %>">Add Project</a>
+          <a href="/about" class="block px-3 py-2 rounded-md text-base font-medium <%= page === '/about' ? 'bg-gray-900' : '' %>">About</a>
+        </div>
+      </div>
     </div>
-</nav>
+  </nav>
+  
+  <script>
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+  </script>
