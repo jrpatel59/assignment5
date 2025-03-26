@@ -2,24 +2,17 @@ require('dotenv').config();
 require('pg');
 const { Sequelize, Op } = require('sequelize');
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: "postgres",
+const sequelize = new Sequelize(process.env.DATABASE_URL || '', {
+  dialect: 'postgres', // or 'mysql', etc.
+  logging: false,
   dialectOptions: {
-    ssl: {
-      require: true, 
-      rejectUnauthorized: false, 
-    },
-  },
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  }
 });
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch((err) => {
-    console.log("Unable to connect to the database:", err);
-  });
+sequelize.authenticate()
+  .then(() => console.log('Database connected!'))
+  .catch(err => console.error('Connection error:', err));
 
 const Sector = sequelize.define('Sector', {
   id: {
